@@ -16,20 +16,50 @@ def draw_card(num, who):
 
 def player_move():
     global up_card
+    print('Up card: ' + up_card)
     print('Your cards:', playerHand)
     wanna_play = input('What do you want to play? ')
-    if wanna_play == '+4':
+    if wanna_play == 'Draw Card':
+        draw_card(1, 'player')
+        print('Up card: ', up_card)
+        print('Your cards: ', playerHand)
+        wanna_play = input('What do you want to play? ')
+        if wanna_play == '+4':
+            color_pick = input('Choose a color: ')
+            up_card = color_pick + '|+4'
+            draw_card(4, 'bot')
+            playerHand.remove(wanna_play)
+        elif wanna_play == 'Change Colour':
+            color_pick = input('Choose a color: ')
+            up_card = color_pick + '|Change Colour'
+            playerHand.remove(wanna_play)
+        elif wanna_play == 'Skip':
+            bot_move()
+        else:
+            up_card1 = up_card.split('|')
+            wanna_play1 = wanna_play.split('|')
+            if up_card1[0] == wanna_play1[0] or up_card1[1] == wanna_play1[1]:
+                up_card = wanna_play
+                playerHand.remove(wanna_play)
+    elif wanna_play == '+4':
         color_pick = input('Choose a color: ')
         up_card = color_pick + '|+4'
         draw_card(4, 'bot')
-    if wanna_play == 'Change Colour':
+        playerHand.remove(wanna_play)
+    elif wanna_play == 'Change Colour':
         color_pick = input('Choose a color: ')
         up_card = color_pick + '|Change Colour'
-    up_card1 = up_card.split('|')
-    wanna_play1 = wanna_play.split('|')
-    if up_card1[0] == wanna_play1[0] or up_card1[1] == wanna_play1[1]:
-        up_card = wanna_play
         playerHand.remove(wanna_play)
+    else:
+        up_card1 = up_card.split('|')
+        wanna_play1 = wanna_play.split('|')
+        if up_card1[0] == wanna_play1[0] or up_card1[1] == wanna_play1[1]:
+            up_card = wanna_play
+            playerHand.remove(wanna_play)
+
+
+def bot_move():
+    pass
 
 
 deck = []
@@ -52,8 +82,10 @@ for i in range(4):
 print('UNO!')
 
 up_card = random.choice(deck)
+if up_card == 'Change Colour' or '+4':
+    deck.append(up_card)
+    up_card = random.choice(deck)
 deck.remove(up_card)
-print(up_card)
 draw_card(7, 'player')
 draw_card(7, 'bot')
 player_move()
